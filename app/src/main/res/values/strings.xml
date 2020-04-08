@@ -6,4 +6,18 @@
     <string name="next_full_moon">Następna pełnia: </string>
     <string name="full_moons_in_year">Pełnie w roku</string>
     <string name="moonImgDesc">Aktualna faza księżyca</string>
+    <string name="year_val">2020</string>
+    <string name="plus_one">+1</string>
+    <string name="minus_one">-1</string>
+    <string name="settings">Ustawienia</string>
+    <string name="select_hemisphere">Wybierz półkulę Ziemi</string>
+    <string name="northern">Północna</string>
+    <string name="southern">Południowa</string>
+    <string name="select_algorithm">Wybierz algorytm obliczania fazy księżyca</string>
+    <string name="simple">Prosty</string>
+    <string name="conway">Conway\'a</string>
+    <string name="trig1">Trygonometryczny 1.</string>
+    <string name="trig2">Trygonometryczny 2.</string>
+    <string name="confirm">Zatwierdź</string>
+    <string name="cancel">Anuluj</string>
 </resources>
