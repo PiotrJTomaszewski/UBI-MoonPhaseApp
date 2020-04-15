@@ -18,8 +18,8 @@ class FullMoonsYearActivity : AppCompatActivity() {
 //        fullMoonDate10, fullMoonDate11
 //    )
 
-    val minYear = 1900
-    val maxYear = 2200
+    private val minYear = 1900
+    private val maxYear = 2200
     val yearRegex = Regex("[1-9][0-9]{3}")
 
 
@@ -73,7 +73,6 @@ class FullMoonsYearActivity : AppCompatActivity() {
 
 
     private fun calculateFullMoonsInYear(year: String) {
-        Log.d("DEBUG", year)
         val calculator = MoonPhaseCalculator()
         val dates = calculator.calculateFullMoonsInYear(selectedAlgorithm, year)
         fullMoonDate00.text = formatDate(dates[0])

@@ -4,15 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
     var selectedHemisphere: Char = 'n'
-    var selectedAlgorithm: Int = 0
+    var selectedAlgorithm: Int = 2
     var calculator: MoonPhaseCalculator? = null
 
     private val settingsViewReqCode: Int = 10000
@@ -20,9 +21,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         calculator = MoonPhaseCalculator()
+        readCurrentSettingsFromFile()
         setContentView(R.layout.activity_main)
         showAllMoonInfo()
-        test()
     }
 
     private fun showCurrentMoonPercent() {
@@ -93,11 +94,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun test() {
-        val currentDate = LocalDate.now()
-        for (i in 0..4) {
-            val phase = calculator!!.calculateMoonPhase(i, currentDate)
-            Log.d("phaseTest", calculator!!.getMoonPercent(phase).toString())
+    private fun readCurrentSettingsFromFile() {
+        val settingsFileName = "settings.txt"
+        if (baseContext.getFileStreamPath(settingsFileName).exists()) {
+            val file = InputStreamReader(openFileInput(settingsFileName))
+            val br = BufferedReader(file)
+            val line = br.readLine()
+            if (line != null) {
+                selectedAlgorithm = line[0].toInt()
+                selectedHemisphere = line[1]
+            }
+            file.close()
         }
     }
 }
