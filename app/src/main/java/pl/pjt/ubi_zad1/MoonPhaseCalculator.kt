@@ -1,43 +1,80 @@
 package pl.pjt.ubi_zad1
 
+import java.time.LocalDate
 import java.util.*
 import kotlin.math.*
 
-class MoonPhaseCalculator(method: Int) {
+class MoonPhaseCalculator() {
     private val rad: Double = 3.14159265 / 180.0
-    private val selectedMethod: Int? = method
-    var moonPhase: Double? = null // TODO: Double or Int
-    var moonPercent: Double? = null
-    var isFirstHalf: Boolean? = null
 
-    fun calculateMoonPhase(year: Int, month: Int, day: Int) {
-        when (selectedMethod) {
-            0 -> calculatePhaseSimple(year, month, day)
-            1 -> calculatePhaseConway(year, month, day)
-            2 -> calculatePhaseTrig(year, month, day)
-            3 -> calculatePhaseTrig2(year, month, day)
-            else -> {}
-        }
-        if (moonPhase!! <= 15) {
-            moonPercent = 100 * moonPhase!! / 15
-            isFirstHalf = true
-        } else {
-            moonPercent = (1-((moonPhase!! - 16) / (29 - 16))) * 100
-            isFirstHalf = false
+    fun calculateMoonPhase(method: Int, date: LocalDate): Double {
+        return when (method) {
+            0 -> calculatePhaseSimple(date.year, date.monthValue, date.dayOfMonth)
+            1 -> calculatePhaseConway(date.year, date.monthValue, date.dayOfMonth)
+            2 -> calculatePhaseTrig(date.year, date.monthValue, date.dayOfMonth)
+            3 -> calculatePhaseTrig2(date.year, date.monthValue, date.dayOfMonth)
+            else -> 0.0
         }
     }
 
-    private fun calculatePhaseSimple(year: Int, month: Int, day: Int) {
+    fun getMoonPercent(moonPhase: Double): Double {
+        return if (moonPhase <= 15) 100 * moonPhase / 15
+        else (1 - ((moonPhase - 16) / (29 - 16))) * 100
+    }
+
+    fun isFirstHalf(moonPhase: Double): Boolean {
+        return (moonPhase <= 15)
+    }
+
+    fun isNewMoon(moonPhase: Double): Boolean {
+        return (moonPhase <= 0.1)
+    }
+
+    fun isFullMoon(moonPhase: Double): Boolean {
+        return (abs(moonPhase - 15) <= 0.1)
+    }
+
+    fun calculateLastNewMoon(method: Int, date_now: LocalDate): LocalDate {
+        var date = date_now.minusDays(1)
+        var curPhase = calculateMoonPhase(method, date)
+        while (!isNewMoon(curPhase)) {
+            date = date.minusDays(1)
+            curPhase = calculateMoonPhase(method, date)
+        }
+        return date
+    }
+
+    fun calculateNextFullMoon(method: Int, date_now: LocalDate): LocalDate {
+        var date = date_now.plusDays(1)
+        var curPhase = calculateMoonPhase(method, date)
+        while (!isFullMoon(curPhase)) {
+            date = date.plusDays(1)
+            curPhase = calculateMoonPhase(method, date)
+        }
+        return date
+    }
+
+    fun calculateFullMoonsInYear(method: Int, year: String): Array<LocalDate> {
+        var date = LocalDate.parse("$year-01-01")
+        var dates = Array<LocalDate>(12) { _ -> LocalDate.now() }
+        for (i in 0..11) {
+            date = calculateNextFullMoon(method, date)
+            dates[i] = date
+        }
+        return dates
+    }
+
+    private fun calculatePhaseSimple(year: Int, month: Int, day: Int): Double {
         val calendar = Calendar.getInstance()
         calendar.set(year, month - 1, day, 20, 35, 0)
         val now = calendar.time
         calendar.set(1970, 0, 7, 20, 35, 0)
         val newMoon = calendar.time
         val phase = ((now.time - newMoon.time) / 1000) % 2551443
-        moonPhase = floor(phase / (24.0 * 3600)) + 1
+        return floor(phase / (24.0 * 3600)) + 1
     }
 
-    private fun calculatePhaseConway(year: Int, month: Int, day: Int) {
+    private fun calculatePhaseConway(year: Int, month: Int, day: Int): Double {
         var r: Double = (year % 100).toDouble()
         r %= 19
         if (r > 9) {
@@ -53,7 +90,7 @@ class MoonPhaseCalculator(method: Int) {
             r -= 8.3
         }
         r = floor(r + 0.5) % 30
-        moonPhase = if (r < 0) {
+        return if (r < 0) {
             r + 30
         } else {
             r
@@ -64,7 +101,7 @@ class MoonPhaseCalculator(method: Int) {
         return fr - floor(fr)
     }
 
-    private fun calculatePhaseTrig(year: Int, month: Int, day: Int) {
+    private fun calculatePhaseTrig(year: Int, month: Int, day: Int): Double {
         val thisJD = julianDay(year, month, day)
         val k0 = floor((year - 1900) * 12.3685)
         val t = (year - 1899.5) / 100
@@ -94,10 +131,10 @@ class MoonPhaseCalculator(method: Int) {
             jday = j0 + 28 * phase + floor(f)
             phase++
         }
-        moonPhase = (thisJD - oldJ) % 30
+        return (thisJD - oldJ) % 30
     }
 
-    private fun calculatePhaseTrig2(year: Int, month: Int, day: Int) {
+    private fun calculatePhaseTrig2(year: Int, month: Int, day: Int): Double {
         val n = floor(12.37 * (year - 1900 + ((1.0 * month - 0.5) / 12.0)))
         val t = n / 1236.85
         val t2 = t * t
@@ -108,7 +145,7 @@ class MoonPhaseCalculator(method: Int) {
         val i = if (xtra > 0.0) floor(xtra) else ceil(xtra - 1.0)
         val j1 = julianDay(year, month, day)
         val jd = (2415020 + 28 * n) + i
-        moonPhase = (j1 - jd + 30) % 30
+        return (j1 - jd + 30) % 30
     }
 
     private fun julianDay(year: Int, month: Int, day: Int): Double {

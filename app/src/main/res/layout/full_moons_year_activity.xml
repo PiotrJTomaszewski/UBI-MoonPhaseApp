@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/year"
+        android:id="@+id/chosenYear"
         android:layout_width="0dp"
         android:layout_height="46dp"
         android:layout_marginStart="32dp"
@@ -30,28 +30,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:onClick="yearMinusOne"
         android:text="@string/minus_one"
         app:layout_constraintEnd_toStartOf="@+id/yearPlus"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/year" />
+        app:layout_constraintTop_toBottomOf="@+id/chosenYear" />
 
     <Button
         android:id="@+id/yearPlus"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:onClick="yearPlusOne"
         android:text="@string/plus_one"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/yearMinus"
-        app:layout_constraintTop_toBottomOf="@+id/year" />
+        app:layout_constraintTop_toBottomOf="@+id/chosenYear" />
 
     <LinearLayout
         android:layout_width="0dp"

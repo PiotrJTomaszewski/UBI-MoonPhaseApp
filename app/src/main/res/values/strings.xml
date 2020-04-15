@@ -2,8 +2,8 @@
     <string name="app_name">UBI_Zad1</string>
     <string name="moon_phases">Fazy księżyca</string>
     <string name="today">Dzisiaj: %d%%</string>
-    <string name="last_new_moon">Poprzedni nów:</string>
-    <string name="next_full_moon">Następna pełnia: </string>
+    <string name="last_new_moon">Poprzedni nów: %sr.</string>
+    <string name="next_full_moon">Następna pełnia: %sr.</string>
     <string name="full_moons_in_year">Pełnie w roku</string>
     <string name="moonImgDesc">Aktualna faza księżyca</string>
     <string name="year_val">2020</string>
