@@ -71,7 +71,11 @@ class MoonPhaseCalculator() {
         calendar.set(1970, 0, 7, 20, 35, 0)
         val newMoon = calendar.time
         val phase = ((now.time - newMoon.time) / 1000) % 2551443
-        return floor(phase / (24.0 * 3600)) + 1
+        val result = floor(phase / (24.0 * 3600)) + 1
+        // For some reason the value is 30 on full moon and it should be 0
+        if (abs(result - 30.0) <= 0.1)
+            return 0.0
+        return result
     }
 
     private fun calculatePhaseConway(year: Int, month: Int, day: Int): Double {

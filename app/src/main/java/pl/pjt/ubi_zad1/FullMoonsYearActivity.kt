@@ -38,8 +38,10 @@ class FullMoonsYearActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (yearRegex.matches(chosenYear.text.toString())) {
-                    calculateFullMoonsInYear(chosenYear.text.toString())
+                val chosenYearString = chosenYear.text.toString()
+                if (yearRegex.matches(chosenYearString)) { // In case someone typed some non-digit characters
+                    if (chosenYearString.toInt() in minYear..maxYear)
+                        calculateFullMoonsInYear(chosenYear.text.toString())
                 }
             }
 
